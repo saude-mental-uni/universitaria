@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a2a5e">
+<title>Saúde Mental Universitária</title>
+<meta name="description" content="Cuidar da sua saúde mental também faz parte da sua jornada acadêmica. Desafios, estratégias, exercício de respiração, quiz e onde buscar apoio.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800;900&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --sky:#3b9ad9; --sky-deep:#2680c2; --navy:#0a2a5e; --blue:#1f78c1;
+  --cream:#fbf6ef; --peach:#f7e1c6; --peach-deep:#e9b98a; --ice:#d3e6f3;
+  --ink:#1c2b45; --muted:#55657e; --ok:#2e9e6b; --bad:#d4553f;
+  --radius:clamp(22px,3vw,32px); --shadow:0 18px 50px rgba(10,42,94,.2);
+  --gut:clamp(16px,4vw,28px);
+  --display:'Montserrat','Segoe UI','Helvetica Neue',Arial,sans-serif;
+  --body:'Nunito','Segoe UI',system-ui,-apple-system,Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{overflow-x:clip;scroll-behavior:smooth;scroll-padding-top:72px;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);color:var(--ink);line-height:1.6;
+  background:#3b9ad9;overflow-x:clip;min-height:100dvh;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+/* gradiente animado (fixo via pseudo-elemento, funciona no iOS) */
+body::before{
+  content:"";position:fixed;left:-25%;top:-25%;width:150%;height:150%;z-index:-2;
+  background:linear-gradient(135deg,#4fb0e8,#2f8ccf,#2a6fb8,#3b9ad9,#56b9ee);
+  animation:bg 30s ease-in-out infinite alternate;will-change:transform;
+}
+@keyframes bg{from{transform:translate3d(-4%,-3%,0) rotate(0deg)}to{transform:translate3d(4%,3%,0) rotate(6deg)}}
+h1,h2,h3,.display{font-family:var(--display),sans-serif}
+a{color:inherit}
+button{font-family:inherit}
+.wrap{max-width:1120px;margin:0 auto;padding:0 var(--gut)}
+:focus-visible{outline:3px solid var(--navy);outline-offset:3px;border-radius:8px}
+
+/* ---------- progresso + nav ---------- */
+#progress{position:fixed;top:0;left:0;height:5px;width:100%;transform:scaleX(0);transform-origin:0 50%;will-change:transform;background:linear-gradient(90deg,var(--peach),#fff);z-index:120;box-shadow:0 0 12px rgba(255,255,255,.8)}
+nav{position:sticky;top:0;z-index:100;background:rgba(10,42,94,.95);color:#fff;transition:.3s}
+nav.scrolled{background:rgba(10,42,94,.95);box-shadow:0 6px 24px rgba(0,0,0,.2)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px;gap:12px}
+.brand{font-family:var(--display);font-weight:800;font-size:1.05rem;display:flex;align-items:center;gap:10px;text-decoration:none;line-height:1.1}
+.brand small{font-weight:600;opacity:.75;font-size:.7rem;display:block}
+.links{display:flex;gap:4px;list-style:none}
+.links a{display:block;padding:9px 15px;border-radius:999px;text-decoration:none;font-weight:700;font-size:.92rem;transition:.25s}
+.links a:hover{background:rgba(255,255,255,.16)}
+.links a.active{background:var(--peach);color:var(--navy)}
+.burger{display:none;width:46px;height:46px;background:none;border:0;cursor:pointer;position:relative}
+.burger i{position:absolute;left:11px;right:11px;height:3px;border-radius:3px;background:#fff;transition:.3s}
+.burger i:nth-child(1){top:16px}.burger i:nth-child(2){top:22px}.burger i:nth-child(3){top:28px}
+.burger.open i:nth-child(1){top:22px;transform:rotate(45deg)}
+.burger.open i:nth-child(2){opacity:0}
+.burger.open i:nth-child(3){top:22px;transform:rotate(-45deg)}
+@media(max-width:820px){
+  .burger{display:block}
+  .links{position:absolute;top:64px;left:0;right:0;flex-direction:column;background:rgba(10,42,94,.98);padding:8px var(--gut) 20px;
+    clip-path:inset(0 0 100% 0);opacity:0;pointer-events:none;transition:.35s}
+  .links.open{clip-path:inset(0 0 0 0);opacity:1;pointer-events:auto}
+  .links a{padding:14px 16px;font-size:1.05rem}
+}
+
+/* ---------- decoração ---------- */
+.tiles{position:fixed;inset:0;pointer-events:none;z-index:-1;overflow:hidden}
+.pt{position:absolute;will-change:transform}
+.tile{
+  width:var(--s,74px);height:var(--s,74px);border-radius:20%;background:#f6efe4;
+  display:grid;place-items:center;font:900 calc(var(--s,74px) * .42) var(--display);color:#e3a572;opacity:.3;
+  box-shadow:inset -6px -8px 14px rgba(0,0,0,.08);animation:float 12s ease-in-out infinite;
+}
+@keyframes float{0%,100%{transform:translateY(0) rotate(var(--r))}50%{transform:translateY(-30px) rotate(calc(var(--r) + 10deg))}}
+@media(max-width:620px){.pt.hide-m{display:none}}
+main,footer{position:relative;z-index:1}
+section{padding:clamp(34px,6vw,60px) 0}
+
+/* ---------- cartões e reveal ---------- */
+.card{background:var(--cream);border-radius:var(--radius);box-shadow:var(--shadow);padding:clamp(22px,4vw,40px);position:relative;overflow:hidden}
+.reveal{opacity:0;transform:translateY(40px) scale(.98);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+.eyebrow{display:inline-block;background:var(--ice);color:var(--navy);font:800 .74rem var(--display);letter-spacing:.12em;text-transform:uppercase;padding:7px 15px;border-radius:999px;margin-bottom:14px}
+.title-xl{font-size:clamp(1.7rem,5.2vw,2.8rem);line-height:1.1;color:var(--navy);font-weight:900;text-transform:uppercase;overflow-wrap:break-word}
+.lead{color:var(--muted);font-size:clamp(1rem,2.4vw,1.1rem);max-width:62ch;margin-top:12px}
+
+/* ---------- hero ---------- */
+.hero{padding-top:clamp(28px,5vw,56px)}
+.hero .card{padding:clamp(34px,6vw,64px) clamp(22px,5vw,48px);display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,.8fr);gap:30px;align-items:center;min-height:min(520px,80dvh)}
+.blob{position:absolute;border-radius:50%;animation:morph 14s ease-in-out infinite;will-change:transform}
+.b1{width:clamp(160px,28vw,300px);aspect-ratio:1;background:var(--peach);right:-8%;top:-14%;opacity:.85}
+.b2{width:clamp(120px,20vw,210px);aspect-ratio:1;background:var(--ice);left:-5%;bottom:-8%;animation-delay:-5s}
+.b3{width:clamp(70px,10vw,120px);aspect-ratio:1;background:var(--ice);right:30%;bottom:6%;opacity:.7;animation-delay:-9s}
+@keyframes morph{0%,100%{transform:translate3d(0,0,0) scale(1)}33%{transform:translate3d(10px,-14px,0) scale(1.06,.96)}66%{transform:translate3d(-12px,10px,0) scale(.96,1.05)}}
+.hero-text{container-type:inline-size;min-width:0;position:relative;z-index:2}
+.hero h1{font-size:clamp(1.9rem,7vw,4rem);font-size:clamp(1.9rem,13.5cqi,5.2rem);line-height:1;font-weight:900;color:var(--navy);position:relative;letter-spacing:-.02em;overflow-wrap:normal}
+.hero h1 .wd{display:inline-block;white-space:nowrap}
+.hero h1 .w{display:block}
+.hero h1 .w:nth-child(2){color:var(--blue)}
+.hero h1 .l{display:inline-block;opacity:0;transform:translateY(60%) rotate(8deg);animation:letter .7s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes letter{to{opacity:1;transform:none}}
+.hero .tag{font-size:clamp(1.05rem,3vw,1.3rem);color:var(--muted);margin:22px 0 14px;max-width:34ch;position:relative}
+.rotator{font:900 clamp(1.3rem,4vw,1.8rem) var(--display);color:var(--blue);height:2.2rem;position:relative;margin-bottom:22px;overflow:hidden}
+.rotator span{position:absolute;left:0;top:0;opacity:0;transform:translateY(100%);transition:.6s cubic-bezier(.2,.8,.2,1);white-space:nowrap}
+.rotator span.on{opacity:1;transform:none}
+.rotator span.out{opacity:0;transform:translateY(-100%)}
+.btns{display:flex;flex-wrap:wrap;gap:12px;position:relative}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:50px;border:0;cursor:pointer;text-decoration:none;font:800 1rem var(--display);
+  padding:14px 28px;border-radius:999px;transition:transform .2s,box-shadow .2s,background .2s;position:relative;overflow:hidden;
+}
+.btn.primary{background:var(--navy);color:#fff;box-shadow:0 8px 22px rgba(10,42,94,.32)}
+.btn.primary:hover{transform:translateY(-3px);background:#0f3a7d;box-shadow:0 14px 28px rgba(10,42,94,.38)}
+.btn.soft{background:var(--peach);color:var(--navy)}
+.btn.soft:hover{transform:translateY(-3px);background:#f2d3ad}
+.btn:active{transform:scale(.97)}
+.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.45);transform:scale(0);animation:rip .6s ease-out forwards;pointer-events:none}
+@keyframes rip{to{transform:scale(3.4);opacity:0}}
+@media(max-width:560px){.btns .btn{flex:1 1 100%}}
+
+.heart-art{position:relative;display:grid;place-items:center;min-height:260px}
+.heart-art .disc{width:clamp(150px,22vw,240px);aspect-ratio:1;border-radius:50%;background:var(--peach);display:grid;place-items:center;animation:beat 3s ease-in-out infinite;position:relative;z-index:2}
+.heart-art .pulse{position:absolute;width:clamp(150px,22vw,240px);aspect-ratio:1;border-radius:50%;border:3px solid var(--blue);opacity:0;animation:pulse 3s ease-out infinite}
+.heart-art .pulse:nth-of-type(2){animation-delay:1s}
+.heart-art .pulse:nth-of-type(3){animation-delay:2s}
+.heart-art svg.h{width:55%;height:55%;position:relative;z-index:2}
+.heart-art .ring{position:absolute;width:62%;aspect-ratio:1;border-radius:50%;background:var(--ice);left:2%;top:4%;z-index:1;animation:morph 10s ease-in-out infinite}
+@keyframes beat{0%,100%{transform:scale(1)}15%{transform:scale(1.07)}30%{transform:scale(1)}45%{transform:scale(1.05)}60%{transform:scale(1)}}
+@keyframes pulse{0%{transform:scale(1);opacity:.55}100%{transform:scale(1.55);opacity:0}}
+.mini{position:absolute;width:22px;height:22px;stroke:var(--blue);fill:var(--peach-deep);stroke-width:1.5;opacity:0;animation:rise 6s ease-in infinite;z-index:3}
+@keyframes rise{0%{transform:translateY(40px) scale(.5);opacity:0}20%{opacity:.9}100%{transform:translateY(-150px) scale(1.2) rotate(18deg);opacity:0}}
+@media(max-width:980px){
+  .hero .card{grid-template-columns:1fr;text-align:left}
+  .heart-art{order:2;min-height:190px;margin-top:6px}
+  .heart-art .ring{width:110px;left:calc(50% - 118px);top:16%}
+}
+
+/* ---------- faixa de palavras ---------- */
+.marquee-wrap{overflow:hidden;padding:22px 0;margin:6px 0}
+.marquee{overflow:hidden;background:rgba(10,42,94,.9);color:#fff;padding:16px 0;transform:rotate(-1.2deg);margin:0 -2%;width:104%;box-shadow:0 10px 30px rgba(0,0,0,.18)}
+.marquee .tr{display:flex;width:max-content;animation:scroll 28s linear infinite;will-change:transform}
+.marquee:hover .tr{animation-play-state:paused}
+.marquee span{font:800 clamp(1rem,3vw,1.4rem) var(--display);text-transform:uppercase;letter-spacing:.08em;padding:0 22px;display:flex;align-items:center;gap:44px;white-space:nowrap}
+.marquee span::after{content:"♥";color:var(--peach-deep)}
+@keyframes scroll{to{transform:translateX(-50%)}}
+
+/* ---------- contadores ---------- */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(8px,2vw,18px);margin-top:24px}
+.stat{background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.45);border-radius:22px;text-align:center;padding:clamp(14px,3vw,24px) 8px;color:#fff;transition:.3s}
+.stat:hover{transform:translateY(-6px);background:rgba(255,255,255,.28)}
+.stat b{font:900 clamp(2rem,7vw,3rem) var(--display);display:block;line-height:1}
+.stat span{font-weight:700;font-size:clamp(.78rem,2.4vw,.95rem);display:block;margin-top:6px;line-height:1.25}
+
+/* ---------- ícones ---------- */
+.ico{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;flex:none;transition:.3s}
+.ico svg{width:28px;height:28px;stroke:var(--navy);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ico.p{background:var(--peach)} .ico.b{background:var(--ice)}
+
+/* ---------- desafios ---------- */
+.grid-ch{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-top:28px}
+.grid-ch .ch{grid-column:span 2}
+.grid-ch .ch:nth-child(n+4){grid-column:span 3}
+@media(max-width:900px){.grid-ch{grid-template-columns:repeat(2,1fr)}.grid-ch .ch,.grid-ch .ch:nth-child(n+4){grid-column:span 1}.grid-ch .ch:last-child{grid-column:span 2}}
+@media(max-width:600px){.grid-ch{grid-template-columns:1fr}.grid-ch .ch:last-child{grid-column:auto}}
+.ch{display:flex;align-items:center;gap:14px;background:#fff;border-radius:20px;padding:14px 18px;font-weight:700;box-shadow:0 4px 14px rgba(10,42,94,.08);transition:transform .15s ease-out,box-shadow .3s;will-change:transform}
+.ch:hover{box-shadow:0 16px 30px rgba(10,42,94,.16)}
+.ch:hover .ico{transform:scale(1.15) rotate(-8deg)}
+.fatores{margin-top:30px;background:var(--ice);border-radius:24px;padding:clamp(18px,3vw,28px)}
+.fatores h3{color:var(--navy);text-transform:uppercase;font-size:1.05rem;margin-bottom:16px}
+.chips{display:flex;flex-wrap:wrap;gap:12px}
+.chip{background:#fff;border-radius:999px;padding:8px 20px 8px 10px;display:flex;align-items:center;gap:10px;font-weight:800;color:var(--navy);transition:.25s;opacity:0;transform:scale(.6)}
+.chips.in .chip{opacity:1;transform:none;transition:opacity .5s,transform .5s cubic-bezier(.3,1.6,.5,1)}
+.chip:hover{transform:scale(1.08) rotate(-2deg)!important}
+.chip .ico{width:38px;height:38px}.chip .ico svg{width:20px;height:20px}
+.callout{margin-top:22px;display:flex;gap:16px;align-items:center;background:var(--peach);border-radius:22px;padding:20px 24px}
+.callout p{font-weight:700;color:var(--navy)}
+.callout .ico{background:#fff;animation:glow 3s ease-in-out infinite}
+@keyframes glow{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,.9)}50%{box-shadow:0 0 0 14px rgba(255,255,255,0)}}
+
+/* ---------- estratégias ---------- */
+.sec-head{text-align:center;margin-bottom:30px;color:#fff}
+.sec-head .title-xl{color:#fff;text-shadow:0 4px 18px rgba(10,42,94,.25)}
+.sec-head .lead{color:rgba(255,255,255,.95);margin:12px auto 0}
+.strat{display:grid;grid-template-columns:repeat(6,1fr);gap:20px}
+.strat .sc{grid-column:span 2}
+.strat .sc:nth-child(n+4){grid-column:span 3}
+@media(max-width:900px){.strat{grid-template-columns:repeat(2,1fr)}.strat .sc,.strat .sc:nth-child(n+4){grid-column:span 1}.strat .sc:last-child{grid-column:span 2}}
+@media(max-width:600px){.strat{grid-template-columns:1fr}.strat .sc:last-child{grid-column:auto}}
+.tilt.reveal.in{transition:transform .15s ease-out,box-shadow .3s!important;transition-delay:0s!important}
+.sc{background:var(--cream);border-radius:26px;padding:26px;box-shadow:var(--shadow);position:relative;overflow:hidden;transition:transform .15s ease-out;will-change:transform}
+.sc .n{position:absolute;right:16px;top:4px;font:900 4.6rem var(--display);color:rgba(10,42,94,.07);transition:.4s}
+.sc:hover .n{color:rgba(31,120,193,.18);transform:scale(1.15)}
+.sc h3{color:var(--navy);margin:16px 0 8px;font-size:1.15rem}
+.sc p{color:var(--muted)}
+.sc::after{content:"";position:absolute;left:0;bottom:0;height:5px;width:100%;transform:scaleX(0);transform-origin:left;background:linear-gradient(90deg,var(--sky),var(--peach-deep));transition:transform .5s}
+.sc:hover::after{transform:scaleX(1)}
+
+/* ---------- respiração ---------- */
+.breath{display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,4vw,40px);align-items:center}
+@media(max-width:820px){.breath{grid-template-columns:1fr}}
+.orb-wrap{display:grid;place-items:center;padding:0;min-width:0}
+.orb-wrap>div{width:min(300px,100%)}
+.orb-box{position:relative;width:100%;margin:0 auto;aspect-ratio:1;display:grid;place-items:center}
+.orb{position:absolute;left:4.5%;top:4.5%;width:91%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,var(--ice) 45%,var(--sky) 100%);box-shadow:0 0 40px rgba(59,154,217,.6);z-index:2;transform:scale(.527);will-change:transform}
+.orb-label{position:absolute;inset:0;display:grid;place-items:center;text-align:center;z-index:3;pointer-events:none}
+.orb-label b{font:800 clamp(.95rem,3.6vw,1.1rem) var(--display);color:var(--navy)}
+.orb-label small{display:block;font:700 .8rem var(--body);color:var(--navy);opacity:.75}
+.bprog{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg);z-index:1;pointer-events:none}
+.bprog circle{fill:none;stroke-width:5;stroke-linecap:round}
+.bprog .pbg{stroke:rgba(31,120,193,.14)}
+.bprog .pfg{stroke:var(--blue);stroke-dasharray:603.2;stroke-dashoffset:603.2}
+.orb-box[data-phase="hold"] .pfg{stroke:var(--peach-deep)}
+.orb-box[data-phase="out"] .pfg{stroke:var(--sky)}
+.orb-box[data-phase="in"] .orb{box-shadow:0 0 70px rgba(59,154,217,.85)}
+.orb-box[data-phase="hold"] .orb{box-shadow:0 0 60px rgba(233,185,138,.9)}
+.orb-box[data-phase="out"] .orb{box-shadow:0 0 30px rgba(59,154,217,.45)}
+.orb-label b.swap{display:block;animation:pop .45s}
+.bhint{text-align:center;font-weight:700;color:var(--muted);min-height:1.6em;margin-top:10px}
+.halo{will-change:transform;position:absolute;inset:0;border-radius:50%;border:3px dashed rgba(31,120,193,.35);animation:spin 30s linear infinite}
+.halo.h2{inset:12%;border-color:rgba(233,185,138,.6);animation-direction:reverse;animation-duration:22s}
+@keyframes spin{to{transform:rotate(360deg)}}
+.cycles{margin-top:14px;font-weight:800;color:var(--navy);font-family:var(--display)}
+.tips{display:grid;gap:10px;margin-top:18px;list-style:none}
+.tips li{display:flex;gap:12px;align-items:flex-start;background:#fff;border-radius:16px;padding:12px 16px;font-weight:600}
+.tips li b{font-family:var(--display);color:var(--blue);flex:none}
+
+/* ---------- plano ---------- */
+.plan{display:grid;grid-template-columns:260px 1fr;gap:clamp(20px,4vw,40px);align-items:center}
+@media(max-width:760px){.plan{grid-template-columns:minmax(0,1fr);justify-items:stretch;text-align:center}.plan>div{width:100%;min-width:0}.ringbox{margin:0 auto}.plan-msg{min-height:3.4em}}
+.ringbox{position:relative;width:200px;height:200px}
+.ringbox svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ringbox circle{fill:none;stroke-width:14;stroke-linecap:round}
+.ringbox .bg{stroke:var(--ice)}
+.ringbox .fg{stroke:var(--blue);stroke-dasharray:502;stroke-dashoffset:502;transition:stroke-dashoffset .8s cubic-bezier(.3,1,.4,1),stroke .4s}
+.ringbox .txt{position:absolute;inset:0;display:grid;place-items:center;text-align:center;font:900 2.6rem var(--display);color:var(--navy);line-height:1}
+.ringbox .txt small{display:block;font:700 .8rem var(--body);color:var(--muted);margin-top:4px}
+.checks{display:grid;gap:10px;width:100%;text-align:left}
+.check{display:flex;align-items:center;gap:14px;background:#fff;border:3px solid transparent;border-radius:18px;padding:12px 16px;cursor:pointer;font-weight:800;color:var(--navy);width:100%;text-align:left;transition:.25s;min-height:56px}
+.check:hover{transform:translateX(6px)}
+.check .box{width:30px;height:30px;border-radius:10px;border:3px solid var(--ice);display:grid;place-items:center;flex:none;transition:.3s}
+.check .box svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:24;stroke-dashoffset:24;transition:.35s}
+.check.on{background:#e8f6fc;border-color:var(--sky)}
+.check.on .box{background:var(--blue);border-color:var(--blue);transform:scale(1.1)}
+.check.on .box svg{stroke-dashoffset:0}
+.plan-msg{font-weight:700;color:var(--muted);margin-top:14px;min-height:3.4em}
+
+/* ---------- apoio ---------- */
+.apoio{display:grid;grid-template-columns:1.1fr .9fr;gap:26px;align-items:start}
+@media(max-width:900px){.apoio{grid-template-columns:1fr}}
+.acc{display:flex;flex-direction:column;gap:12px;margin-top:22px}
+.acc button{width:100%;text-align:left;background:#fff;border:0;border-radius:20px;padding:14px 16px;cursor:pointer;font:800 clamp(.95rem,2.8vw,1.02rem) var(--display);color:var(--navy);display:flex;align-items:center;gap:14px;transition:.25s;min-height:64px}
+.acc button:hover{background:var(--ice)}
+.acc .more{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s ease;color:var(--muted)}
+.acc .more>div{overflow:hidden;padding:0 18px}
+.acc .item.open .more{grid-template-rows:1fr}
+.acc .item.open .more>div{padding:12px 18px 6px}
+.acc .item.open button{background:var(--ice)}
+.acc .chev{margin-left:auto;transition:.35s;flex:none}
+.acc .item.open .chev{transform:rotate(180deg)}
+.side{background:var(--navy);color:#fff;border-radius:var(--radius);padding:clamp(24px,4vw,36px);box-shadow:var(--shadow);position:sticky;top:88px;overflow:hidden}
+@media(max-width:900px){.side{position:relative;top:auto}}
+.side::before{content:"";position:absolute;width:220px;height:220px;border-radius:50%;background:rgba(59,154,217,.25);right:-70px;top:-70px;animation:morph 12s ease-in-out infinite}
+.side h3{font-size:1.4rem;margin-bottom:12px;position:relative}
+.side p{opacity:.92;position:relative}
+.side .quote{margin-top:22px;padding-top:20px;border-top:2px solid rgba(255,255,255,.2);font-weight:800}
+
+/* ---------- quiz ---------- */
+.quiz{max-width:780px;margin:0 auto}
+.qtop{display:flex;justify-content:space-between;gap:10px;font-weight:800;color:var(--navy);margin-bottom:10px;font-family:var(--display);font-size:clamp(.85rem,2.8vw,1rem)}
+.bar{height:14px;border-radius:99px;background:var(--ice);overflow:hidden;margin-bottom:26px}
+.bar i{display:block;height:100%;width:100%;transform:scaleX(0);transform-origin:left;background:linear-gradient(90deg,var(--sky),var(--navy));border-radius:99px;transition:transform .6s cubic-bezier(.3,1,.4,1)}
+.qtext{font:800 clamp(1.15rem,3.6vw,1.5rem)/1.3 var(--display);color:var(--navy);margin-bottom:24px;min-height:3.9em}
+.qtext.swap{animation:swap .45s ease}
+@keyframes swap{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:none}}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.opt{border:3px solid var(--ice);background:#fff;border-radius:20px;padding:18px;min-height:64px;font:800 1.15rem var(--display);color:var(--navy);cursor:pointer;transition:.2s}
+.opt:hover:not(:disabled){border-color:var(--sky);transform:translateY(-4px);box-shadow:0 10px 20px rgba(59,154,217,.25)}
+.opt.right{background:#e3f6ec;border-color:var(--ok);animation:pop .4s}
+.opt.wrong{background:#fde9e5;border-color:var(--bad);animation:shake .45s}
+.opt:disabled{cursor:default}
+@keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+.fb{display:none;margin-top:22px;border-radius:20px;padding:18px 20px;background:var(--ice);animation:pop .4s}
+.fb.show{display:block}
+.fb b{display:block;font-family:var(--display);margin-bottom:4px;color:var(--navy)}
+@keyframes pop{from{transform:scale(.92);opacity:0}to{transform:none;opacity:1}}
+.next{margin-top:18px}
+.result{text-align:center;display:none}
+.result.show{display:block;animation:pop .5s}
+.score{font:900 clamp(3.4rem,14vw,5rem) var(--display);color:var(--navy);line-height:1}
+.review{text-align:left;margin-top:26px;display:grid;gap:10px}
+.rv{background:#fff;border-radius:16px;padding:12px 16px;border-left:6px solid var(--ok);font-size:.95rem}
+.rv.x{border-color:var(--bad)}
+.rv small{display:block;color:var(--muted)}
+
+/* ---------- rodapé, toast, topo ---------- */
+.wave{display:block;width:100%;height:clamp(40px,8vw,90px);margin-bottom:-1px}
+footer{color:#fff;text-align:center}
+footer .body{background:var(--navy);padding:30px 0 calc(34px + env(safe-area-inset-bottom))}
+footer .final{font:800 clamp(1.2rem,3.4vw,1.8rem)/1.3 var(--display);max-width:30ch;margin:0 auto 20px}
+footer p{opacity:.78;font-size:.9rem;max-width:60ch;margin:6px auto 0;padding:0 var(--gut)}
+footer .btns{justify-content:center;margin-bottom:22px;padding:0 var(--gut)}
+#toast{opacity:0;visibility:hidden;position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translate(-50%,120px);background:var(--navy);color:#fff;padding:14px 24px;border-radius:999px;font-weight:800;z-index:300;transition:.4s cubic-bezier(.3,1.4,.5,1);box-shadow:0 10px 30px rgba(0,0,0,.3);max-width:90vw;text-align:center}
+#toast.show{transform:translate(-50%,0);opacity:1;visibility:visible}
+#top{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:calc(20px + env(safe-area-inset-bottom));width:52px;height:52px;border-radius:50%;border:0;background:var(--peach);color:var(--navy);cursor:pointer;z-index:110;opacity:0;transform:scale(.5);pointer-events:none;transition:.35s;box-shadow:0 8px 22px rgba(0,0,0,.25);display:grid;place-items:center}
+#top.show{opacity:1;transform:none;pointer-events:auto}
+#top:hover{transform:translateY(-4px)}
+#top svg{width:24px;height:24px;stroke:var(--navy);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;transform:rotate(180deg)}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:250;width:100%;height:100%}
+
+@media(max-width:560px){
+  .opts{grid-template-columns:1fr}
+  .callout{flex-direction:column;text-align:center}
+}
+@media(max-width:380px){
+  .stat span{font-size:.72rem}
+  .ico{width:48px;height:48px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .reveal,.hero h1 .l,.chip{opacity:1!important;transform:none!important}
+  .rotator span:first-child{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<canvas id="confetti"></canvas>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-9-9.2C1.6 7.3 3.8 4 7 4c2 0 3.6 1.1 5 3 1.4-1.9 3-3 5-3 3.2 0 5.4 3.3 4 6.8C19 15.6 12 20 12 20z"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 7h6"/></symbol>
+    <symbol id="i-wallet" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M3 10h18M16 14.5h2"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c.5-3.6 3-5.5 6-5.5s5.5 1.9 6 5.5"/><circle cx="17" cy="9" r="2.4"/><path d="M17 14.2c2.2.2 3.7 1.6 4 4.3"/></symbol>
+    <symbol id="i-door" viewBox="0 0 24 24"><path d="M10 4H6a2 2 0 00-2 2v12a2 2 0 002 2h4"/><path d="M14 8l4 4-4 4M18 12H9"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 019.5 4a8 8 0 1010.5 10.5z"/></symbol>
+    <symbol id="i-dumb" viewBox="0 0 24 24"><path d="M6 8v8M18 8v8M3 10v4M21 10v4M6 12h12"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 12a8 8 0 01-11.6 7.1L4 20l1.1-4.4A8 8 0 1121 12z"/><path d="M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01"/></symbol>
+    <symbol id="i-hand" viewBox="0 0 24 24"><path d="M12 21s-8-4.5-8-11V5l8-2 8 2v5c0 6.5-8 11-8 11z"/><path d="M9 11.5l2.2 2.2L15.5 9"/></symbol>
+    <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 00-3.6 10.8c.7.6 1.1 1.4 1.1 2.2h5c0-.8.4-1.6 1.1-2.2A6 6 0 0012 3z"/></symbol>
+    <symbol id="i-flower" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2.5"/><path d="M12 9.5C10 6 11 3 12 3s2 3 0 6.5zM14.5 12c3.5-2 6.5-1 6.5 0s-3 2-6.5 0zM12 14.5c2 3.5 1 6.5 0 6.5s-2-3 0-6.5zM9.5 12C6 14 3 13 3 12s3-2 6.5 0z"/></symbol>
+    <symbol id="i-face" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 9.5h.01M15 9.5h.01M8.5 16c1-1.2 2.2-1.8 3.5-1.8s2.5.6 3.5 1.8"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><rect x="7" y="3" width="10" height="18" rx="2.5"/><path d="M11 18h2"/></symbol>
+    <symbol id="i-brain" viewBox="0 0 24 24"><path d="M9 4a3 3 0 00-3 3 3 3 0 00-2 5 3 3 0 002 5 3 3 0 006 0V7a3 3 0 00-3-3z"/><path d="M15 4a3 3 0 013 3 3 3 0 012 5 3 3 0 01-2 5 3 3 0 01-6 0"/></symbol>
+    <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18a4 4 0 01-.5-8A5.5 5.5 0 0117 8.5 4.8 4.8 0 0117.5 18H7z"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+    <symbol id="i-wind" viewBox="0 0 24 24"><path d="M3 8h11a3 3 0 10-3-3M3 12h16a3 3 0 11-3 3M3 16h8"/></symbol>
+  </defs>
+</svg>
+
+<div class="tiles" aria-hidden="true">
+  <div class="pt" data-d="14" style="left:4%;top:14%"><div class="tile" style="--r:-12deg">S</div></div>
+  <div class="pt" data-d="-20" style="right:5%;top:9%"><div class="tile" style="--r:14deg;--s:90px;animation-delay:-3s">M</div></div>
+  <div class="pt hide-m" data-d="26" style="left:7%;top:58%"><div class="tile" style="--r:-6deg;--s:60px;animation-delay:-6s">U</div></div>
+  <div class="pt hide-m" data-d="-12" style="right:9%;top:54%"><div class="tile" style="--r:20deg;animation-delay:-9s">C</div></div>
+  <div class="pt hide-m" data-d="18" style="left:46%;top:86%"><div class="tile" style="--r:8deg;--s:64px;animation-delay:-4s">♥</div></div>
+</div>
+
+<nav id="nav">
+  <div class="wrap">
+    <a class="brand" href="#inicio"><span class="ico b" style="width:36px;height:36px"><svg style="width:19px;height:19px"><use href="#i-heart"/></svg></span><span>Saúde Mental<small>UniCatólica</small></span></a>
+    <button class="burger" id="burger" aria-label="Abrir menu" aria-expanded="false"><i></i><i></i><i></i></button>
+    <ul class="links" id="links">
+      <li><a href="#inicio">Início</a></li>
+      <li><a href="#desafios">Desafios</a></li>
+      <li><a href="#estrategias">Estratégias</a></li>
+      <li><a href="#respire">Respire</a></li>
+      <li><a href="#plano">Plano</a></li>
+      <li><a href="#apoio">Apoio</a></li>
+      <li><a href="#quiz">Quiz</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main>
+<!-- HERO -->
+<section class="hero" id="inicio" data-spy>
+  <div class="wrap">
+    <div class="card reveal">
+      <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+      <div class="hero-text">
+        <h1 id="h1" aria-label="Saúde Mental Universitária"><span class="w">Saúde Mental</span><span class="w">Universitária</span></h1>
+        <p class="tag">Cuidar da sua saúde mental também faz parte da sua jornada acadêmica.</p>
+        <div class="rotator" id="rot" aria-hidden="true"><span class="on">Respire.</span><span>Descanse.</span><span>Converse.</span><span>Peça ajuda.</span></div>
+        <div class="btns">
+          <a class="btn primary" href="#desafios">Conhecer a jornada</a>
+          <a class="btn soft" href="#respire">Respirar 1 minuto</a>
+        </div>
+      </div>
+      <div class="heart-art" aria-hidden="true">
+        <div class="ring"></div>
+        <span class="pulse"></span><span class="pulse"></span><span class="pulse"></span>
+        <div class="disc"><svg class="h" viewBox="0 0 24 24" fill="none" stroke="#0a2a5e" stroke-width="1.3" stroke-linejoin="round"><use href="#i-heart"/></svg></div>
+        <svg class="mini" style="left:18%;bottom:20%;animation-delay:0s" viewBox="0 0 24 24"><use href="#i-heart"/></svg>
+        <svg class="mini" style="left:70%;bottom:14%;animation-delay:2s" viewBox="0 0 24 24"><use href="#i-heart"/></svg>
+        <svg class="mini" style="left:46%;bottom:6%;animation-delay:4s" viewBox="0 0 24 24"><use href="#i-heart"/></svg>
+      </div>
+    </div>
+    <div class="stats reveal">
+      <div class="stat"><b data-count="7">0</b><span>desafios da vida universitária</span></div>
+      <div class="stat"><b data-count="5">0</b><span>estratégias de cuidado</span></div>
+      <div class="stat"><b data-count="5">0</b><span>fontes de apoio</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee-wrap"><div class="marquee" aria-hidden="true">
+  <div class="tr">
+    <span>Respire</span><span>Descanse</span><span>Converse</span><span>Faça pausas</span><span>Peça ajuda</span><span>Cuide de você</span>
+    <span>Respire</span><span>Descanse</span><span>Converse</span><span>Faça pausas</span><span>Peça ajuda</span><span>Cuide de você</span>
+  </div>
+</div></div>
+
+<!-- DESAFIOS -->
+<section id="desafios" data-spy>
+  <div class="wrap">
+    <div class="card reveal">
+      <span class="eyebrow">Passo 1</span>
+      <h2 class="title-xl">Desafios da vida universitária</h2>
+      <p class="lead">A rotina acadêmica pode trazer muitos aprendizados, mas também desafios que podem influenciar a sua saúde mental.</p>
+
+      <div class="grid-ch">
+        <div class="ch tilt"><span class="ico b"><svg><use href="#i-doc"/></svg></span>Provas e avaliações</div>
+        <div class="ch tilt"><span class="ico p"><svg><use href="#i-layers"/></svg></span>Muitas tarefas e disciplinas</div>
+        <div class="ch tilt"><span class="ico b"><svg><use href="#i-clock"/></svg></span>Falta de tempo e descanso</div>
+        <div class="ch tilt"><span class="ico p"><svg><use href="#i-book"/></svg></span>Conciliação entre estudos, trabalho e responsabilidades pessoais</div>
+        <div class="ch tilt"><span class="ico b"><svg><use href="#i-wallet"/></svg></span>Questões financeiras</div>
+        <div class="ch tilt"><span class="ico p"><svg><use href="#i-users"/></svg></span>Relacionamentos e conflitos interpessoais</div>
+        <div class="ch tilt"><span class="ico b"><svg><use href="#i-door"/></svg></span>Mudanças na rotina e adaptação ao ambiente universitário</div>
+      </div>
+
+      <div class="fatores">
+        <h3>Esses fatores podem gerar:</h3>
+        <div class="chips" id="chips">
+          <span class="chip"><span class="ico p"><svg><use href="#i-flower"/></svg></span>Estresse</span>
+          <span class="chip"><span class="ico b"><svg><use href="#i-face"/></svg></span>Ansiedade</span>
+          <span class="chip"><span class="ico p"><svg><use href="#i-phone"/></svg></span>Cansaço mental</span>
+          <span class="chip"><span class="ico b"><svg><use href="#i-brain"/></svg></span>Dificuldade de concentração</span>
+          <span class="chip"><span class="ico p"><svg><use href="#i-cloud"/></svg></span>Desmotivação</span>
+        </div>
+      </div>
+
+      <div class="callout">
+        <span class="ico"><svg><use href="#i-bulb"/></svg></span>
+        <p>Você não precisa passar por isso sozinho(a). Reconhecer os desafios é o primeiro passo para buscar equilíbrio e cuidado.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ESTRATEGIAS -->
+<section id="estrategias" data-spy>
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Passo 2</span>
+      <h2 class="title-xl">Estratégias para cuidar da sua saúde mental</h2>
+      <p class="lead">Pequenas mudanças na rotina podem fazer uma grande diferença. Confira algumas estratégias que podem te ajudar.</p>
+    </div>
+    <div class="strat">
+      <article class="sc tilt reveal"><span class="n">1</span><span class="ico b"><svg><use href="#i-doc"/></svg></span><h3>Organize sua rotina</h3><p>Planeje seus estudos com metas realistas e reserve um tempo para o lazer.</p></article>
+      <article class="sc tilt reveal"><span class="n">2</span><span class="ico p"><svg><use href="#i-moon"/></svg></span><h3>Valorize o descanso</h3><p>O sono de qualidade melhora a concentração, o humor e o desempenho acadêmico.</p></article>
+      <article class="sc tilt reveal"><span class="n">3</span><span class="ico b"><svg><use href="#i-dumb"/></svg></span><h3>Pratique o autocuidado</h3><p>Inclua atividades que te façam bem, como exercícios físicos, hobbies e momentos de pausa.</p></article>
+      <article class="sc tilt reveal"><span class="n">4</span><span class="ico p"><svg><use href="#i-chat"/></svg></span><h3>Conte com sua rede de apoio</h3><p>Converse com amigos, familiares e professores sobre suas dificuldades.</p></article>
+      <article class="sc tilt reveal"><span class="n">5</span><span class="ico b"><svg><use href="#i-hand"/></svg></span><h3>Reconheça seus limites</h3><p>Nem sempre é possível dar conta de tudo. Respeite seu tempo e busque ajuda quando necessário.</p></article>
+    </div>
+  </div>
+</section>
+
+<!-- RESPIRE -->
+<section id="respire" data-spy>
+  <div class="wrap">
+    <div class="card reveal">
+      <div class="breath">
+        <div>
+          <span class="eyebrow">Momento de pausa</span>
+          <h2 class="title-xl">Respire por um minuto</h2>
+          <p class="lead">Pausas fazem parte do autocuidado. Acompanhe o círculo: inspire enquanto ele cresce, segure e solte o ar enquanto ele diminui.</p>
+          <ul class="tips">
+            <li><b>1</b>Sente-se de forma confortável e solte os ombros.</li>
+            <li><b>2</b>Siga o ritmo: inspire, segure e solte devagar.</li>
+            <li><b>3</b>Se sentir desconforto, pare e respire normalmente.</li>
+          </ul>
+          <div class="btns" style="margin-top:22px"><button class="btn primary" id="bBtn">Começar</button></div>
+        </div>
+        <div class="orb-wrap">
+          <div>
+            <div class="orb-box">
+              <div class="halo"></div><div class="halo h2"></div>
+              <svg class="bprog" viewBox="0 0 200 200" aria-hidden="true"><circle class="pbg" cx="100" cy="100" r="96"/><circle class="pfg" id="bProg" cx="100" cy="100" r="96"/></svg>
+              <div class="orb" id="orb"></div><div class="orb-label"><div><b id="bTxt">Pronto?</b><small id="bSec">toque em começar</small></div></div>
+            </div>
+            <p class="bhint" id="bHint" aria-live="polite">Toque em começar</p>
+            <p class="cycles" id="bCycles" style="text-align:center;margin-top:4px">0 ciclos</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLANO -->
+<section id="plano" data-spy>
+  <div class="wrap">
+    <div class="card reveal">
+      <span class="eyebrow">Coloque em prática</span>
+      <h2 class="title-xl" style="margin-bottom:24px">Monte o seu plano da semana</h2>
+      <div class="plan">
+        <div style="text-align:center">
+          <div class="ringbox">
+            <svg viewBox="0 0 200 200"><circle class="bg" cx="100" cy="100" r="80"/><circle class="fg" id="ring" cx="100" cy="100" r="80"/></svg>
+            <div class="txt"><div><span id="pCount">0</span>/5<small>estratégias</small></div></div>
+          </div>
+        </div>
+        <div>
+          <div class="checks" id="checks">
+            <button class="check" type="button" aria-pressed="false"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>Vou organizar minha rotina com metas realistas</button>
+            <button class="check" type="button" aria-pressed="false"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>Vou valorizar meu descanso e meu sono</button>
+            <button class="check" type="button" aria-pressed="false"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>Vou reservar um momento de autocuidado</button>
+            <button class="check" type="button" aria-pressed="false"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>Vou conversar com alguém da minha rede de apoio</button>
+            <button class="check" type="button" aria-pressed="false"><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>Vou respeitar meus limites e pedir ajuda se precisar</button>
+          </div>
+          <p class="plan-msg" id="pMsg">Marque o que você se compromete a fazer. Suas escolhas ficam salvas neste aparelho.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- APOIO -->
+<section id="apoio" data-spy>
+  <div class="wrap">
+    <div class="apoio">
+      <div class="card reveal">
+        <span class="eyebrow">Passo 3</span>
+        <h2 class="title-xl">Onde buscar apoio?</h2>
+        <div class="acc" id="acc">
+          <div class="item open">
+            <button aria-expanded="true"><span class="ico p"><svg><use href="#i-hand"/></svg></span>Serviço de apoio psicológico da instituição<svg class="chev" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0a2a5e" stroke-width="2" stroke-linecap="round"><use href="#i-chev"/></svg></button>
+            <div class="more"><div>A instituição oferece atendimento psicológico para os estudantes. Procure informações sobre como acessar.</div></div>
+          </div>
+          <div class="item">
+            <button aria-expanded="false"><span class="ico b"><svg><use href="#i-heart"/></svg></span>Família e amigos<svg class="chev" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0a2a5e" stroke-width="2" stroke-linecap="round"><use href="#i-chev"/></svg></button>
+            <div class="more"><div>Quem convive com você pode ser o primeiro apoio. Conversar sobre o que está sentindo já alivia.</div></div>
+          </div>
+          <div class="item">
+            <button aria-expanded="false"><span class="ico p"><svg><use href="#i-users"/></svg></span>Colegas de curso<svg class="chev" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0a2a5e" stroke-width="2" stroke-linecap="round"><use href="#i-chev"/></svg></button>
+            <div class="more"><div>Quem vive a mesma rotina costuma entender o que você enfrenta. Trocar experiências ajuda.</div></div>
+          </div>
+          <div class="item">
+            <button aria-expanded="false"><span class="ico b"><svg><use href="#i-book"/></svg></span>Professores e coordenação<svg class="chev" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0a2a5e" stroke-width="2" stroke-linecap="round"><use href="#i-chev"/></svg></button>
+            <div class="more"><div>Avise quando as dificuldades estiverem atrapalhando seus estudos. Juntos é possível buscar alternativas.</div></div>
+          </div>
+          <div class="item">
+            <button aria-expanded="false"><span class="ico p"><svg><use href="#i-brain"/></svg></span>Profissionais de Psicologia<svg class="chev" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0a2a5e" stroke-width="2" stroke-linecap="round"><use href="#i-chev"/></svg></button>
+            <div class="more"><div>Psicólogas e psicólogos podem acolher, orientar e acompanhar você com cuidado e sigilo profissional.</div></div>
+          </div>
+        </div>
+      </div>
+      <aside class="side reveal">
+        <h3>Cuidar também é pedir ajuda</h3>
+        <p>Buscar apoio não é sinal de fraqueza. É uma forma de se responsabilizar pelo próprio bem-estar ao longo da graduação.</p>
+        <p style="margin-top:12px">Se o sofrimento estiver intenso ou muito frequente, procure um profissional de saúde.</p>
+        <p class="quote">Cuidar da sua saúde mental é um ato de responsabilidade com você e com o seu futuro.</p>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section id="quiz" data-spy>
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Hora de praticar</span>
+      <h2 class="title-xl">Mito ou verdade?</h2>
+      <p class="lead">Teste o que você sabe sobre saúde mental na vida universitária. É só um quiz de aprendizado, não um teste de diagnóstico.</p>
+    </div>
+    <div class="card quiz reveal" id="quizBox">
+      <div id="qArea">
+        <div class="qtop"><span id="qCount"></span><span id="qScore"></span></div>
+        <div class="bar"><i id="qBar"></i></div>
+        <p class="qtext" id="qText"></p>
+        <div class="opts">
+          <button class="opt" data-v="false">Mito</button>
+          <button class="opt" data-v="true">Verdade</button>
+        </div>
+        <div class="fb" id="fb" role="status"><b id="fbTitle"></b><span id="fbText"></span></div>
+        <button class="btn primary next" id="nextBtn" style="display:none"></button>
+      </div>
+      <div class="result" id="result">
+        <p class="eyebrow">Seu resultado</p>
+        <p class="score"><span id="rScore">0</span>/<span id="rTotal">0</span></p>
+        <p class="lead" id="rMsg" style="margin:12px auto"></p>
+        <div class="review" id="review"></div>
+        <div class="btns" style="justify-content:center;margin-top:26px">
+          <button class="btn primary" id="again">Refazer o quiz</button>
+          <a class="btn soft" href="#apoio">Ver onde buscar apoio</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <svg class="wave" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true"><path d="M0,50 C220,100 460,0 720,46 C980,92 1220,10 1440,56 L1440,90 L0,90Z" fill="#0a2a5e"/></svg>
+  <div class="body">
+    <div class="wrap">
+      <p class="final">Cuidar da sua saúde mental é um ato de responsabilidade com você e com o seu futuro.</p>
+      <div class="btns"><button class="btn soft" id="share">Compartilhar este site</button></div>
+      <p>UniCatólica · Centro Universitário Católico do Tocantins</p>
+      <p>Conteúdo informativo e educativo. Não substitui o atendimento de um profissional de saúde.</p>
+    </div>
+  </div>
+</footer>
+
+<button id="top" aria-label="Voltar ao topo"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
+
+<script>
+const $ = id => document.getElementById(id);
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const canHover = matchMedia('(hover:hover) and (pointer:fine)').matches;
+const store = {
+  get(k){ try { return localStorage.getItem(k); } catch(e){ return null; } },
+  set(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
+};
+function toast(msg){
+  const t = $('toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+/* ---------- título letra a letra (agrupado por palavra) ---------- */
+(function(){
+  let i = 0;
+  document.querySelectorAll('#h1 .w').forEach(w => {
+    const words = w.textContent.split(' '); w.textContent = '';
+    words.forEach((word, wi) => {
+      const wd = document.createElement('span'); wd.className = 'wd';
+      [...word].forEach(ch => {
+        const s = document.createElement('span');
+        s.className = 'l'; s.textContent = ch;
+        s.style.animationDelay = (0.25 + i++ * 0.045) + 's';
+        wd.appendChild(s);
+      });
+      w.appendChild(wd);
+      if (wi < words.length - 1) w.appendChild(document.createTextNode(' '));
+    });
+  });
+})();
+
+/* ---------- palavras rotativas ---------- */
+(function(){
+  const sp = [...document.querySelectorAll('#rot span')]; let n = 0;
+  if (reduce) return;
+  setInterval(() => {
+    const cur = sp[n]; n = (n + 1) % sp.length;
+    cur.className = 'out';
+    setTimeout(() => { cur.className = ''; }, 650);
+    sp[n].className = 'on';
+  }, 2200);
+})();
+
+/* ---------- nav, progresso, topo ---------- */
+const nav = $('nav'), bar = $('progress'), topBtn = $('top');
+let maxScroll = 1, ticking = false, lastY = -1, navOn = false, topOn = false;
+function measure(){ const h = document.documentElement; maxScroll = Math.max(1, h.scrollHeight - h.clientHeight); }
+function paintScroll(){
+  ticking = false;
+  const y = scrollY;
+  bar.style.transform = 'scaleX(' + Math.min(1, y / maxScroll).toFixed(4) + ')';
+  const n = y > 30, t = y > 700;
+  if (n !== navOn) { navOn = n; nav.classList.toggle('scrolled', n); }
+  if (t !== topOn) { topOn = t; topBtn.classList.toggle('show', t); }
+}
+function onScroll(){ if (!ticking) { ticking = true; requestAnimationFrame(paintScroll); } }
+addEventListener('scroll', onScroll, {passive:true});
+addEventListener('resize', () => { measure(); onScroll(); }, {passive:true});
+addEventListener('load', () => { measure(); onScroll(); });
+measure(); paintScroll();
+topBtn.addEventListener('click', () => scrollTo({top:0, behavior:'smooth'}));
+
+const burger = $('burger'), links = $('links');
+burger.addEventListener('click', () => {
+  const o = links.classList.toggle('open');
+  burger.classList.toggle('open', o);
+  burger.setAttribute('aria-expanded', o);
+});
+links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  links.classList.remove('open'); burger.classList.remove('open'); burger.setAttribute('aria-expanded', false);
+}));
+
+/* scroll spy */
+const spy = new IntersectionObserver(es => es.forEach(e => {
+  if (!e.isIntersecting) return;
+  links.querySelectorAll('a').forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id));
+}), {rootMargin:'-45% 0px -50% 0px'});
+document.querySelectorAll('[data-spy]').forEach(s => spy.observe(s));
+
+/* ---------- reveal, chips, contadores ---------- */
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+}), {threshold:.12});
+document.querySelectorAll('.reveal').forEach(el => {
+  const sibs = [...el.parentElement.children].filter(c => c.classList.contains('reveal'));
+  el.style.transitionDelay = (sibs.indexOf(el) % 4) * 100 + 'ms';
+  io.observe(el);
+});
+const chips = $('chips');
+[...chips.children].forEach((c, i) => c.style.transitionDelay = i * 110 + 'ms');
+new IntersectionObserver((es, o) => es.forEach(e => { if (e.isIntersecting){ chips.classList.add('in'); o.disconnect(); } }), {threshold:.4}).observe(chips);
+
+const co = new IntersectionObserver(es => es.forEach(e => {
+  if (!e.isIntersecting) return;
+  const el = e.target, end = +el.dataset.count, t0 = performance.now();
+  (function tick(t){
+    const p = Math.min((t - t0) / 1300, 1);
+    el.textContent = Math.round(end * (1 - Math.pow(1 - p, 3)));
+    if (p < 1) requestAnimationFrame(tick);
+  })(t0);
+  co.unobserve(el);
+}), {threshold:.6});
+document.querySelectorAll('[data-count]').forEach(el => co.observe(el));
+
+/* ---------- parallax suave dos blocos e inclinação dos cards ---------- */
+if (canHover && !reduce) {
+  const pts = [...document.querySelectorAll('.pt')];
+  let tx = 0, ty = 0, cx = 0, cy = 0, raf = 0;
+  const loop = () => {
+    cx += (tx - cx) * .08; cy += (ty - cy) * .08;
+    pts.forEach(p => { const d = +p.dataset.d; p.style.transform = `translate3d(${(cx * d * 3).toFixed(2)}px,${(cy * d * 3).toFixed(2)}px,0)`; });
+    raf = (Math.abs(tx - cx) > .0005 || Math.abs(ty - cy) > .0005) ? requestAnimationFrame(loop) : 0;
+  };
+  addEventListener('pointermove', e => {
+    tx = e.clientX / innerWidth - .5; ty = e.clientY / innerHeight - .5;
+    if (!raf) raf = requestAnimationFrame(loop);
+  }, {passive:true});
+
+  document.querySelectorAll('.tilt').forEach(el => {
+    let px = 0, py = 0, pend = false;
+    const apply = () => {
+      pend = false;
+      el.style.transform = `perspective(700px) rotateX(${(-py * 7).toFixed(2)}deg) rotateY(${(px * 9).toFixed(2)}deg) translate3d(0,-4px,0)`;
+    };
+    el.addEventListener('pointermove', e => {
+      const r = el.getBoundingClientRect();
+      px = (e.clientX - r.left) / r.width - .5; py = (e.clientY - r.top) / r.height - .5;
+      if (!pend) { pend = true; requestAnimationFrame(apply); }
+    });
+    el.addEventListener('pointerleave', () => { pend = false; el.style.transform = ''; });
+  });
+}
+/* efeito ripple nos botões */
+document.addEventListener('click', e => {
+  const b = e.target.closest('.btn'); if (!b || reduce) return;
+  const r = b.getBoundingClientRect(), s = Math.max(r.width, r.height), sp = document.createElement('span');
+  sp.className = 'ripple'; sp.style.cssText = `width:${s}px;height:${s}px;left:${e.clientX - r.left - s / 2}px;top:${e.clientY - r.top - s / 2}px`;
+  b.appendChild(sp); setTimeout(() => sp.remove(), 650);
+});
+
+/* ---------- respiração ---------- */
+/* Animação feita com a Web Animations API: é o próprio exercício, acionado pelo usuário,
+   então não depende das transições CSS que o modo "reduzir movimento" desliga. */
+(function(){
+  const orb = $('orb'), txt = $('bTxt'), sec = $('bSec'), btn = $('bBtn'), cyc = $('bCycles'),
+        prog = $('bProg'), hint = $('bHint'), box = document.querySelector('.orb-box');
+  const C = 603.2;
+  const phases = [
+    {n:'Inspire', h:'Pelo nariz, devagar', s:4, to:1, cls:'in'},
+    {n:'Segure',  h:'Sem esforço, só segure', s:4, to:1, cls:'hold'},
+    {n:'Solte',   h:'Solte o ar devagar', s:6, to:.527, cls:'out'}
+  ];
+  let run = false, timer, cycles = 0, p = 0, left = 0, cur = .527, anims = [];
+  const scaleNow = () => { try { return new DOMMatrix(getComputedStyle(orb).transform).a || 1; } catch(e){ return cur; } };
+  const cancelAll = () => { anims.forEach(a => a.cancel()); anims = []; };
+
+  function setPhase(){
+    const ph = phases[p], from = scaleNow(); left = ph.s; cur = ph.to;
+    cancelAll();
+    box.dataset.phase = ph.cls;
+    txt.textContent = ph.n; txt.classList.remove('swap'); void txt.offsetWidth; txt.classList.add('swap');
+    sec.textContent = left + 's'; hint.textContent = ph.h;
+    orb.style.transform = `scale(${ph.to})`;
+    anims.push(orb.animate(
+      [{transform:`scale(${from})`}, {transform:`scale(${ph.to})`}],
+      {duration:ph.s * 1000, easing:'ease-in-out'}));
+    anims.push(prog.animate(
+      [{strokeDashoffset:C}, {strokeDashoffset:0}],
+      {duration:ph.s * 1000, easing:'linear', fill:'forwards'}));
+  }
+  function tick(){
+    left--;
+    if (left > 0) { sec.textContent = left + 's'; return; }
+    p = (p + 1) % phases.length;
+    if (p === 0) { cycles++; cyc.textContent = cycles + (cycles === 1 ? ' ciclo' : ' ciclos'); }
+    setPhase();
+  }
+  function stop(msg){
+    run = false; clearInterval(timer);
+    const from = scaleNow(); cancelAll(); cur = .527;
+    orb.style.transform = 'scale(.527)';
+    orb.animate([{transform:`scale(${from})`}, {transform:'scale(.527)'}], {duration:1000, easing:'ease'});
+    prog.style.strokeDashoffset = C; box.removeAttribute('data-phase');
+    btn.textContent = cycles ? 'Recomeçar' : 'Começar';
+    txt.textContent = msg || 'Pausa feita';
+    sec.textContent = cycles ? 'Bom trabalho' : 'toque em começar';
+    hint.textContent = cycles ? 'Você fez ' + cycles + (cycles === 1 ? ' ciclo' : ' ciclos') : 'Toque em começar';
+  }
+  btn.addEventListener('click', () => {
+    if (run) return stop('Pausado');
+    run = true; p = 0; cycles = 0; cyc.textContent = '0 ciclos'; btn.textContent = 'Parar';
+    setPhase(); timer = setInterval(tick, 1000);
+  });
+})();
+
+/* ---------- plano da semana ---------- */
+(function(){
+  const checks = [...document.querySelectorAll('#checks .check')], ring = $('ring'), cnt = $('pCount'), msg = $('pMsg');
+  const C = 502, msgs = [
+    'Marque o que você se compromete a fazer. Suas escolhas ficam salvas neste aparelho.',
+    'Um bom começo. Pequenos passos contam.',
+    'Você está construindo uma rotina de cuidado.',
+    'Mais da metade! Continue assim.',
+    'Falta só um passo.',
+    'Plano completo! Cuidar de você é prioridade.'
+  ];
+  let saved = []; try { saved = JSON.parse(store.get('plano-sm') || '[]'); } catch(e){}
+  function render(celebrate){
+    const n = checks.filter(c => c.classList.contains('on')).length;
+    cnt.textContent = n; msg.textContent = msgs[n];
+    ring.style.strokeDashoffset = C - C * n / checks.length;
+    ring.style.stroke = n === checks.length ? '#2e9e6b' : '';
+    store.set('plano-sm', JSON.stringify(checks.map(c => c.classList.contains('on'))));
+    if (celebrate && n === checks.length) confetti();
+  }
+  checks.forEach((c, i) => {
+    if (saved[i]) { c.classList.add('on'); c.setAttribute('aria-pressed', 'true'); }
+    c.addEventListener('click', () => {
+      const on = c.classList.toggle('on'); c.setAttribute('aria-pressed', on); render(true);
+    });
+  });
+  render(false);
+  /* reserva a altura da mensagem mais longa, para o card não pular ao marcar itens */
+  function fitMsg(){
+    const cur = msg.textContent; msg.style.minHeight = '0'; let mh = 0;
+    msgs.forEach(t => { msg.textContent = t; mh = Math.max(mh, msg.offsetHeight); });
+    msg.textContent = cur; msg.style.minHeight = mh + 'px';
+  }
+  fitMsg(); addEventListener('resize', fitMsg, {passive:true});
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitMsg);
+})();
+
+/* ---------- acordeão ---------- */
+document.querySelectorAll('#acc .item > button').forEach(b => b.addEventListener('click', () => {
+  const item = b.parentElement, was = item.classList.contains('open');
+  document.querySelectorAll('#acc .item').forEach(i => { i.classList.remove('open'); i.firstElementChild.setAttribute('aria-expanded', false); });
+  if (!was) { item.classList.add('open'); b.setAttribute('aria-expanded', true); }
+}));
+
+/* ---------- quiz ---------- */
+const Q = [
+  {t:'Sentir ansiedade antes de uma prova é sempre sinal de fraqueza.', a:false,
+   e:'Sentir tensão diante de avaliações é comum na vida universitária. Quando isso fica intenso ou constante, vale buscar apoio.'},
+  {t:'Dormir bem ajuda na concentração, no humor e no desempenho acadêmico.', a:true,
+   e:'O sono de qualidade está entre as estratégias de cuidado: ele influencia a concentração, o humor e o rendimento nos estudos.'},
+  {t:'Pedir ajuda significa que você não dá conta da faculdade.', a:false,
+   e:'Nem sempre é possível dar conta de tudo. Reconhecer seus limites e buscar ajuda é uma atitude de cuidado.'},
+  {t:'Conversar com amigos, familiares e professores sobre suas dificuldades faz parte do autocuidado.', a:true,
+   e:'Contar com a rede de apoio é uma das estratégias para cuidar da saúde mental. Você não precisa passar por isso sozinho(a).'},
+  {t:'Estudar sem pausas e abrir mão do lazer é o melhor jeito de render mais.', a:false,
+   e:'Planejar metas realistas e reservar tempo para o lazer e para pausas ajuda a manter equilíbrio e desempenho.'},
+  {t:'A instituição de ensino pode oferecer atendimento psicológico aos estudantes.', a:true,
+   e:'Muitas instituições têm serviço de apoio psicológico. Procure informações sobre como acessar o da sua universidade.'},
+  {t:'Falta de tempo e de descanso pode influenciar a saúde mental de quem estuda.', a:true,
+   e:'A sobrecarga de tarefas, somada à falta de descanso, é um dos desafios da vida universitária que podem gerar estresse e cansaço mental.'},
+  {t:'Quem passa por dificuldades emocionais na faculdade precisa resolver tudo sozinho(a).', a:false,
+   e:'Ninguém precisa passar por isso sozinho(a). Colegas, professores, família e profissionais de Psicologia podem ajudar.'}
+];
+let idx = 0, hits = 0, streak = 0, log = [];
+const opts = [...document.querySelectorAll('.opt')];
+const plural = n => `${n} acerto${n === 1 ? '' : 's'}`;
+
+function show(){
+  const q = Q[idx];
+  $('qCount').textContent = `Pergunta ${idx + 1} de ${Q.length}`;
+  $('qScore').textContent = plural(hits) + (streak >= 3 ? ` · sequência de ${streak}` : '');
+  $('qBar').style.transform = `scaleX(${idx / Q.length})`;
+  const qt = $('qText'); qt.textContent = q.t; qt.classList.remove('swap'); void qt.offsetWidth; qt.classList.add('swap');
+  opts.forEach(o => { o.disabled = false; o.className = 'opt'; });
+  $('fb').classList.remove('show');
+  $('nextBtn').style.display = 'none';
+}
+opts.forEach(o => o.addEventListener('click', () => {
+  const q = Q[idx], pick = o.dataset.v === 'true', ok = pick === q.a;
+  if (ok) { hits++; streak++; } else streak = 0;
+  log.push({q:q.t, ok, a:q.a});
+  opts.forEach(x => { x.disabled = true; if ((x.dataset.v === 'true') === q.a) x.classList.add('right'); });
+  if (!ok) o.classList.add('wrong');
+  $('fbTitle').textContent = ok ? (streak >= 3 ? `Isso mesmo! Sequência de ${streak}.` : 'Isso mesmo!') : 'Quase lá.';
+  $('fbText').textContent = (q.a ? 'É verdade. ' : 'É um mito. ') + q.e;
+  $('fb').classList.add('show');
+  $('qScore').textContent = plural(hits) + (streak >= 3 ? ` · sequência de ${streak}` : '');
+  $('qBar').style.transform = `scaleX(${(idx + 1) / Q.length})`;
+  $('nextBtn').textContent = idx === Q.length - 1 ? 'Ver resultado' : 'Próxima pergunta';
+  $('nextBtn').style.display = 'inline-flex';
+  if (navigator.vibrate) navigator.vibrate(ok ? 20 : [30, 40, 30]);
+}));
+$('nextBtn').addEventListener('click', () => {
+  if (++idx < Q.length) return show();
+  $('qArea').style.display = 'none';
+  const r = $('result'); r.classList.add('show');
+  $('rTotal').textContent = Q.length;
+  const rs = $('rScore'), t0 = performance.now();
+  (function tick(t){ const p = Math.min((t - t0) / 900, 1); rs.textContent = Math.round(hits * p); if (p < 1) requestAnimationFrame(tick); })(t0);
+  const ratio = hits / Q.length;
+  $('rMsg').textContent = ratio >= .75
+    ? 'Ótimo! Você já conhece bem o assunto. Que tal compartilhar essas informações com colegas?'
+    : ratio >= .5
+    ? 'Bom caminho! Releia as estratégias e a seção de apoio para consolidar o que viu.'
+    : 'Tudo bem, o importante é aprender. Dê uma olhada nas seções acima e tente de novo.';
+  $('review').innerHTML = log.map((l, i) =>
+    `<div class="rv ${l.ok ? '' : 'x'}"><b>${i + 1}.</b> ${l.q}<small>${l.ok ? 'Você acertou' : 'Você errou'} · era ${l.a ? 'verdade' : 'mito'}</small></div>`).join('');
+  if (ratio >= .75) confetti();
+  $('quizBox').scrollIntoView({behavior:'smooth', block:'start'});
+});
+$('again').addEventListener('click', () => {
+  idx = 0; hits = 0; streak = 0; log = [];
+  $('result').classList.remove('show'); $('qArea').style.display = 'block'; show();
+  $('quizBox').scrollIntoView({behavior:'smooth', block:'center'});
+});
+show();
+
+/* ---------- compartilhar ---------- */
+$('share').addEventListener('click', async () => {
+  const data = {title:'Saúde Mental Universitária', text:'Cuidar da sua saúde mental também faz parte da sua jornada acadêmica.', url:location.href};
+  try {
+    if (navigator.share) { await navigator.share(data); return; }
+    await navigator.clipboard.writeText(location.href); toast('Link copiado!');
+  } catch(e) { if (e.name !== 'AbortError') toast('Copie o endereço na barra do navegador'); }
+});
+
+/* ---------- confete ---------- */
+function confetti(){
+  if (reduce) return;
+  const c = $('confetti'), x = c.getContext('2d'), dpr = Math.min(devicePixelRatio || 1, 2);
+  c.width = innerWidth * dpr; c.height = innerHeight * dpr; x.scale(dpr, dpr);
+  const cols = ['#f7e1c6','#ffffff','#3b9ad9','#0a2a5e','#e9b98a','#d3e6f3'];
+  const ps = Array.from({length:150}, () => ({
+    x:innerWidth / 2 + (Math.random() - .5) * 200, y:innerHeight * .6,
+    s:6 + Math.random() * 8, vx:(Math.random() - .5) * 16, vy:-8 - Math.random() * 12,
+    r:Math.random() * 6, vr:(Math.random() - .5) * .4, c:cols[Math.floor(Math.random() * cols.length)]
+  }));
+  let f = 0;
+  (function go(){
+    x.clearRect(0, 0, innerWidth, innerHeight);
+    ps.forEach(p => {
+      p.vy += .32; p.vx *= .992; p.x += p.vx; p.y += p.vy; p.r += p.vr;
+      x.save(); x.translate(p.x, p.y); x.rotate(p.r);
+      x.fillStyle = p.c; x.fillRect(-p.s / 2, -p.s / 2, p.s, p.s * .6); x.restore();
+    });
+    if (++f < 200) requestAnimationFrame(go); else x.clearRect(0, 0, innerWidth, innerHeight);
+  })();
+}
+</script>
+</body>
+</html>
