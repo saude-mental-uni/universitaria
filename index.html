@@ -494,7 +494,7 @@ footer .btns{justify-content:center;margin-bottom:22px;padding:0 var(--gut)}
         <div>
           <span class="eyebrow">Momento de pausa</span>
           <h2 class="title-xl">Respire por um minuto</h2>
-          <p class="lead">Pausas fazem parte do autocuidado. Acompanhe o círculo: inspire enquanto ele cresce, segure e solte o ar enquanto ele diminui.</p>
+          <p class="lead">Pausas fazem parte do autocuidado. Acompanhe o círculo: inspire por 4 segundos enquanto ele cresce, segure por 4 e solte o ar por 7 enquanto ele diminui. São 4 ciclos de 15 segundos, ou seja, 1 minuto.</p>
           <ul class="tips">
             <li><b>1</b>Sente-se de forma confortável e solte os ombros.</li>
             <li><b>2</b>Siga o ritmo: inspire, segure e solte devagar.</li>
@@ -510,7 +510,7 @@ footer .btns{justify-content:center;margin-bottom:22px;padding:0 var(--gut)}
               <div class="orb" id="orb"></div><div class="orb-label"><div><b id="bTxt">Pronto?</b><small id="bSec">toque em começar</small></div></div>
             </div>
             <p class="bhint" id="bHint" aria-live="polite">Toque em começar</p>
-            <p class="cycles" id="bCycles" style="text-align:center;margin-top:4px">0 ciclos</p>
+            <p class="cycles" id="bCycles" style="text-align:center;margin-top:4px">0 de 4 ciclos · 1:00</p>
           </div>
         </div>
       </div>
@@ -786,9 +786,13 @@ document.addEventListener('click', e => {
   const phases = [
     {n:'Inspire', h:'Pelo nariz, devagar', s:4, to:1, cls:'in'},
     {n:'Segure',  h:'Sem esforço, só segure', s:4, to:1, cls:'hold'},
-    {n:'Solte',   h:'Solte o ar devagar', s:6, to:.527, cls:'out'}
+    {n:'Solte',   h:'Solte o ar devagar', s:7, to:.527, cls:'out'}
   ];
-  let run = false, timer, cycles = 0, p = 0, left = 0, cur = .527, anims = [];
+  const TOTAL = 60, PER = phases.reduce((a, x) => a + x.s, 0), NCYC = TOTAL / PER; /* 4+4+7 = 15s, 4 ciclos = 1 minuto */
+  let run = false, timer, cycles = 0, p = 0, left = 0, cur = .527, anims = [], elapsed = 0;
+  const mmss = t => Math.floor(t / 60) + ':' + String(t % 60).padStart(2, '0');
+  const plural = n => n + (n === 1 ? ' ciclo' : ' ciclos');
+  const showTime = () => { cyc.textContent = cycles + ' de ' + NCYC + ' ciclos · restam ' + mmss(Math.max(0, TOTAL - elapsed)); };
   const scaleNow = () => { try { return new DOMMatrix(getComputedStyle(orb).transform).a || 1; } catch(e){ return cur; } };
   const cancelAll = () => { anims.forEach(a => a.cancel()); anims = []; };
 
@@ -807,26 +811,29 @@ document.addEventListener('click', e => {
       {duration:ph.s * 1000, easing:'linear', fill:'forwards'}));
   }
   function tick(){
-    left--;
-    if (left > 0) { sec.textContent = left + 's'; return; }
+    left--; elapsed++;
+    if (left > 0) { sec.textContent = left + 's'; showTime(); return; }
     p = (p + 1) % phases.length;
-    if (p === 0) { cycles++; cyc.textContent = cycles + (cycles === 1 ? ' ciclo' : ' ciclos'); }
+    if (p === 0) cycles++;
+    showTime();
+    if (elapsed >= TOTAL) return stop('Concluído', true);
     setPhase();
   }
-  function stop(msg){
+  function stop(msg, done){
     run = false; clearInterval(timer);
     const from = scaleNow(); cancelAll(); cur = .527;
     orb.style.transform = 'scale(.527)';
     orb.animate([{transform:`scale(${from})`}, {transform:'scale(.527)'}], {duration:1000, easing:'ease'});
     prog.style.strokeDashoffset = C; box.removeAttribute('data-phase');
-    btn.textContent = cycles ? 'Recomeçar' : 'Começar';
+    btn.textContent = elapsed ? 'Recomeçar' : 'Começar';
     txt.textContent = msg || 'Pausa feita';
-    sec.textContent = cycles ? 'Bom trabalho' : 'toque em começar';
-    hint.textContent = cycles ? 'Você fez ' + cycles + (cycles === 1 ? ' ciclo' : ' ciclos') : 'Toque em começar';
+    sec.textContent = done ? 'Bom trabalho' : (elapsed ? 'pausado' : 'toque em começar');
+    hint.textContent = done ? 'Você completou 1 minuto de respiração · ' + plural(cycles)
+      : elapsed ? 'Você respirou por ' + mmss(elapsed) + ' · ' + plural(cycles) : 'Toque em começar';
   }
   btn.addEventListener('click', () => {
     if (run) return stop('Pausado');
-    run = true; p = 0; cycles = 0; cyc.textContent = '0 ciclos'; btn.textContent = 'Parar';
+    run = true; p = 0; cycles = 0; elapsed = 0; showTime(); btn.textContent = 'Parar';
     setPhase(); timer = setInterval(tick, 1000);
   });
 })();
