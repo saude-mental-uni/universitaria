@@ -318,6 +318,19 @@ footer .btns{justify-content:center;margin-bottom:22px;padding:0 var(--gut)}
   .stat span{font-size:.72rem}
   .ico{width:48px;height:48px}
 }
+
+/* ---------- desempenho em celular/toque: rolagem fluida ---------- */
+@media (hover:none), (max-width:900px){
+  html{scroll-behavior:auto}
+  body{min-height:100svh}
+  body::before{animation:none!important;will-change:auto;width:100%;height:100%;left:0;top:0;transform:none}
+  .tiles{display:none}
+  .blob,.side::before,.heart-art .ring,.halo{animation-play-state:paused}
+  .pt,.ch,.sc,.blob,.halo,.tilt{will-change:auto!important}
+  .card,.sc,.side{box-shadow:0 8px 24px rgba(10,42,94,.18)}
+  .reveal{transform:translateY(20px)}
+  .reveal.in{transform:none}
+}
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
   .reveal,.hero h1 .l,.chip{opacity:1!important;transform:none!important}
